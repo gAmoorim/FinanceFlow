@@ -1,0 +1,121 @@
+Este documento contém todas as verificações necessárias para cada rota da API do projeto de gerenciamento de finanças pessoais: financeFlow.
+
+---
+
+🔐 Autenticação & Usuário
+
+POST /login – Login
+- [ ] email e senha presentes
+- [ ] verificar se email existe
+- [ ] comparar senha com bcrypt
+- [ ] gerar token JWT
+
+GET /perfil – Obter perfil
+- [ ] token JWT presente
+- [ ] validar token
+- [ ] retornar dados do usuário autenticado
+
+PUT /perfil – Atualizar perfil
+- [ ] token JWT presente e válido
+- [ ] validar nome/email/senha
+- [ ] verificar se novo email já existe
+- [ ] criptografar nova senha se for alterada
+
+DELETE /perfil – Excluir conta
+- [ ] token JWT válido
+- [ ] confirmar existência do usuário
+- [ ] deletar dados associados (transações, metas, categorias)
+
+---
+
+## 💸 Transações
+
+GET /transacoes
+- [ ] token JWT válido
+- [ ] aplicar filtros se presentes (data, tipo, categoria)
+- [ ] retornar apenas transações do usuário
+
+GET /transacoes/:id
+- [ ] token JWT válido
+- [ ] verificar se transação existe e pertence ao usuário
+
+POST /transacoes
+- [ ] token JWT válido
+- [ ] campos obrigatórios: valor, tipo, categoria_id
+- [ ] valor numérico e positivo
+- [ ] tipo deve ser 'entrada' ou 'saida'
+- [ ] categoria_id deve existir e pertencer ao usuário
+
+PUT /transacoes/:id
+- [ ] token JWT válido
+- [ ] verificar se transação existe e é do usuário
+- [ ] validar campos modificados
+
+DELETE /transacoes/:id
+- [ ] token JWT válido
+- [ ] verificar se transação existe e pertence ao usuário
+
+GET /transacoes/resumo
+- [ ] token JWT válido
+- [ ] calcular entradas, saídas e saldo
+
+GET /transacoes/grafico
+- [ ] token JWT válido
+- [ ] validar parâmetros de agrupamento (mês/categoria)
+
+---
+
+## 🏷️ Categorias
+
+GET /categorias
+- [ ] token JWT válido
+
+GET /categorias/:id
+- [ ] token JWT válido
+- [ ] verificar se categoria existe e pertence ao usuário
+
+POST /categorias
+- [ ] token JWT válido
+- [ ] nome e tipo obrigatórios
+- [ ] tipo deve ser 'entrada' ou 'saida'
+
+PUT /categorias/:id
+- [ ] token JWT válido
+- [ ] verificar se categoria pertence ao usuário
+- [ ] validar campos
+
+DELETE /categorias/:id
+- [ ] token JWT válido
+- [ ] verificar se categoria pertence ao usuário
+- [ ] impedir exclusão se houver transações associadas (opcional)
+
+---
+
+## 🎯 Metas
+
+GET /metas
+- [ ] token JWT válido
+
+GET /metas/:id
+- [ ] token JWT válido
+- [ ] verificar se meta pertence ao usuário
+
+POST /metas
+- [ ] token JWT válido
+- [ ] titulo e valor_total obrigatórios
+- [ ] valor_total positivo
+- [ ] valor_atual ≥ 0
+
+PUT /metas/:id
+- [ ] token JWT válido
+- [ ] verificar se meta pertence ao usuário
+- [ ] validar campos modificados
+
+PATCH /metas/:id/adicionar
+- [ ] token JWT válido
+- [ ] valor positivo
+- [ ] valor_atual + valor ≤ valor_total
+
+DELETE /metas/:id
+- [ ] token JWT válido
+- [ ] verificar se meta pertence ao usuário
