@@ -1,121 +1,135 @@
-Este documento contém todas as verificações necessárias para cada rota da API do projeto de gerenciamento de finanças pessoais: financeFlow.
-
----
-
 🔐 Autenticação & Usuário
 
-POST /login – Login
-- [ ] email e senha presentes
-- [ ] verificar se email existe
-- [ ] comparar senha com bcrypt
-- [ ] gerar token JWT
+|── controllerUsuario
 
-GET /perfil – Obter perfil
-- [ ] token JWT presente
-- [ ] validar token
-- [ ] retornar dados do usuário autenticado
+ - controllerCadastrarUsuario (POST /usuarios)
+    º recebe no body: nome, email, senha
+    º valida campos obrigatórios e formato do email
+    º verifica se o email já está cadastrado
+    º senha com pelo menos 6 caracteres
+    º realiza a criptografia hash da senha com bcrypt
+    º cria novo usuário no banco 
+    º retorna: 201 Created
 
-PUT /perfil – Atualizar perfil
-- [ ] token JWT presente e válido
-- [ ] validar nome/email/senha
-- [ ] verificar se novo email já existe
-- [ ] criptografar nova senha se for alterada
+- controllerLoginUsuario (POST /login)
+    º recebe no body: email, senha
+    º verificar email e senha presentes
+    º busca usuário pelo email
+    º compara senha com hash usando bcrypt
+    º gera e retorna token JWT
+    º retorna: 200 OK + token
 
-DELETE /perfil – Excluir conta
-- [ ] token JWT válido
-- [ ] confirmar existência do usuário
-- [ ] deletar dados associados (transações, metas, categorias)
+- controllerObterPerfil (GET /perfil)
+    º exige token JWT no header Authorization
+    º valida e decodifica token
+    º busca dados do usuário
+    º retorna: 200 OK + dados do usuário
 
----
+- controllerAtualizarPerfil (PUT /perfil)
+    º exige token JWT
+    º recebe campos parciais: nome, email, senha
+    º se senha enviada: recriptografar
+    º se email enviado: verificar se já existe
+    º atualiza dados
+    º retorna: 204 No Content ou 200 OK
+
+- controllerDeletarPerfil (DELETE /perfil)
+    º exige token JWT
+    º confirmar existência do usuário
+    º deleta usuário e dados vinculados (transações, metas, categorias)
+    º retorna: 204 No Content
 
 ## 💸 Transações
 
-GET /transacoes
-- [ ] token JWT válido
-- [ ] aplicar filtros se presentes (data, tipo, categoria)
-- [ ] retornar apenas transações do usuário
+│── controllerTransacoes
 
-GET /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e pertence ao usuário
+    - controllerListarTransacoes (GET /transacoes)
+    º exige token JWT
+    º pode usar filtros por data, tipo ou categoria
+    º retorna: 200 OK + array de transações
 
-POST /transacoes
-- [ ] token JWT válido
-- [ ] campos obrigatórios: valor, tipo, categoria_id
-- [ ] valor numérico e positivo
-- [ ] tipo deve ser 'entrada' ou 'saida'
-- [ ] categoria_id deve existir e pertencer ao usuário
+- controllerDetalharTransacao (GET /transacoes/:id)
+    º exige token JWT
+    º verifica se transação existe e pertence ao usuário
+    º retorna: 200 OK + dados
 
-PUT /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e é do usuário
-- [ ] validar campos modificados
+- controllerCriarTransacao (POST /transacoes)
+    º exige token JWT
+    º recebe: descricao, valor, tipo, categoria_id, data
+    º valida tipo, valor positivo e existência da categoria
+    º salva no banco
+    º retorna: 201 Created
 
-DELETE /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e pertence ao usuário
+- controllerAtualizarTransacao (PUT /transacoes/:id)
+    º exige token JWT
+    º verifica se transação pertence ao usuário
+    º atualiza campos permitidos
+    º retorna: 204 No Content
 
-GET /transacoes/resumo
-- [ ] token JWT válido
-- [ ] calcular entradas, saídas e saldo
+- controllerExcluirTransacao (DELETE /transacoes/:id)
+    º exige token JWT
+    º verifica se transação pertence ao usuário
+    º deleta do banco
+    º retorna: 204 No Content
 
-GET /transacoes/grafico
-- [ ] token JWT válido
-- [ ] validar parâmetros de agrupamento (mês/categoria)
+- controllerResumoTransacoes (GET /transacoes/resumo)
+    º exige token JWT
+    º calcula totais de entrada, saída e saldo
+    º retorna: 200 OK + resumo
 
----
+│── controllerCategorias
 
-## 🏷️ Categorias
+- controllerListarCategorias (GET /categorias)
+   º exige token JWT
+   º retorna: 200 OK + array de categorias
 
-GET /categorias
-- [ ] token JWT válido
+- controllerCriarCategoria (POST /categorias)
+   º exige token JWT
+   º recebe: nome, tipo
+   º tipo deve ser 'entrada' ou 'saida'
+   º salva no banco
+   º retorna: 201 Created
 
-GET /categorias/:id
-- [ ] token JWT válido
-- [ ] verificar se categoria existe e pertence ao usuário
+- controllerAtualizarCategoria (PUT /categorias/:id)
+   º exige token JWT
+   º verifica se categoria pertence ao usuário
+   º atualiza dados permitidos
+   º retorna: 204 No Content
 
-POST /categorias
-- [ ] token JWT válido
-- [ ] nome e tipo obrigatórios
-- [ ] tipo deve ser 'entrada' ou 'saida'
+- controllerExcluirCategoria (DELETE /categorias/:id)
+   º exige token JWT
+   º verifica se categoria pertence ao usuário
+   º bloqueia se houver transações associadas (opcional)
+   º retorna: 204 No Content
 
-PUT /categorias/:id
-- [ ] token JWT válido
-- [ ] verificar se categoria pertence ao usuário
-- [ ] validar campos
+│── controllerMetas
 
-DELETE /categorias/:id
-- [ ] token JWT válido
-- [ ] verificar se categoria pertence ao usuário
-- [ ] impedir exclusão se houver transações associadas (opcional)
+- controllerListarMetas (GET /metas)
+   º exige token JWT
+   º retorna: 200 OK + array de metas
 
----
+- controllerCriarMeta (POST /metas)
+   º exige token JWT
+   º recebe: titulo, valor_total, valor_atual?, data_limite?
+   º valida valores positivos
+   º salva meta no banco
+   º retorna: 201 Created
 
-## 🎯 Metas
+- controllerAtualizarMeta (PUT /metas/:id)
+   º exige token JWT
+   º verifica se meta pertence ao usuário
+   º atualiza campos válidos
+   º retorna: 204 No Content
 
-GET /metas
-- [ ] token JWT válido
+- controllerAdicionarValorMeta (PATCH /metas/:id/adicionar)
+   º exige token JWT
+   º recebe: valor
+   º valida valor positivo e se não ultrapassa valor_total
+   º atualiza valor_atual
+   º retorna: 200 OK
 
-GET /metas/:id
-- [ ] token JWT válido
-- [ ] verificar se meta pertence ao usuário
-
-POST /metas
-- [ ] token JWT válido
-- [ ] titulo e valor_total obrigatórios
-- [ ] valor_total positivo
-- [ ] valor_atual ≥ 0
-
-PUT /metas/:id
-- [ ] token JWT válido
-- [ ] verificar se meta pertence ao usuário
-- [ ] validar campos modificados
-
-PATCH /metas/:id/adicionar
-- [ ] token JWT válido
-- [ ] valor positivo
-- [ ] valor_atual + valor ≤ valor_total
-
-DELETE /metas/:id
-- [ ] token JWT válido
-- [ ] verificar se meta pertence ao usuário
+- controllerExcluirMeta (DELETE /metas/:id)
+   º exige token JWT
+   º verifica se meta pertence ao usuário
+   º deleta do banco
+   º retorna: 204 No Content
