@@ -43,10 +43,10 @@
 
 │── controllerTransacoes
 
-    - controllerListarTransacoes (GET /transacoes)
+- controllerListarTransacoes (GET /transacoes)
     º exige token JWT
-    º pode usar filtros por data, tipo ou categoria
-    º retorna: 200 OK + array de transações
+    º aplicar filtros se presentes data, tipo ou categoria
+    º retorna: 200 OK + array de transações do usuário
 
 - controllerDetalharTransacao (GET /transacoes/:id)
     º exige token JWT
@@ -57,18 +57,19 @@
     º exige token JWT
     º recebe: descricao, valor, tipo, categoria_id, data
     º valida tipo, valor positivo e existência da categoria
+    º tipo deve ser 'entrada' ou 'saida'
     º salva no banco
     º retorna: 201 Created
 
 - controllerAtualizarTransacao (PUT /transacoes/:id)
     º exige token JWT
-    º verifica se transação pertence ao usuário
+    º verifica se transação existe e pertence ao usuário
     º atualiza campos permitidos
     º retorna: 204 No Content
 
 - controllerExcluirTransacao (DELETE /transacoes/:id)
     º exige token JWT
-    º verifica se transação pertence ao usuário
+    º verifica se transação existe e pertence ao usuário
     º deleta do banco
     º retorna: 204 No Content
 
@@ -76,6 +77,11 @@
     º exige token JWT
     º calcula totais de entrada, saída e saldo
     º retorna: 200 OK + resumo
+
+- controllerGraficoTransacoes (GET /transacoes/grafico)
+    º exige token JWT
+    º validar parâmetros de agrupamento (mês/categoria)
+    º retorna: 200 OK + grafico
 
 │── controllerCategorias
 

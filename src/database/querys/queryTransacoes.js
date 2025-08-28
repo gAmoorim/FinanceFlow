@@ -22,6 +22,13 @@ const queryListarTransacoes = async (userId, filtros) => {
   return await query.select("*")
 }
 
+const queryVerificarTransacao = async (transacaoId, usuario_id) => { 
+  return await knex('transacoes') 
+  .where({ id: transacaoId, user_id: usuario_id }) 
+  .first()
+}
+
 module.exports = {
   queryListarTransacoes,
+  queryVerificarTransacao
 }

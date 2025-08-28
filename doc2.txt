@@ -1,45 +1,6 @@
 🔐 Autenticação & Usuário
 
 
----
-
-## 💸 Transações
-
-GET /transacoes
-- [ ] token JWT válido
-- [ ] aplicar filtros se presentes (data, tipo, categoria)
-- [ ] retornar apenas transações do usuário
-
-GET /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e pertence ao usuário
-
-POST /transacoes
-- [ ] token JWT válido
-- [ ] campos obrigatórios: valor, tipo, categoria_id
-- [ ] valor numérico e positivo
-- [ ] tipo deve ser 'entrada' ou 'saida'
-- [ ] categoria_id deve existir e pertencer ao usuário
-
-PUT /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e é do usuário
-- [ ] validar campos modificados
-
-DELETE /transacoes/:id
-- [ ] token JWT válido
-- [ ] verificar se transação existe e pertence ao usuário
-
-GET /transacoes/resumo
-- [ ] token JWT válido
-- [ ] calcular entradas, saídas e saldo
-
-GET /transacoes/grafico
-- [ ] token JWT válido
-- [ ] validar parâmetros de agrupamento (mês/categoria)
-
----
-
 ## 🏷️ Categorias
 
 GET /categorias
