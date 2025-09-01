@@ -56,8 +56,7 @@
 - controllerCriarTransacao (POST /transacoes)
     º exige token JWT
     º recebe: descricao, valor, tipo, categoria_id, data
-    º valida tipo, valor positivo e existência da categoria
-    º tipo deve ser 'entrada' ou 'saida'
+    º valida tipo (entrada ou despesa), valor positivo e existência da categoria
     º salva no banco
     º retorna: 201 Created
 
@@ -83,18 +82,19 @@
     º validar parâmetros de agrupamento (mês/categoria)
     º retorna: 200 OK + grafico
 
-│── controllerCategorias
+│── 🏷️ controllerCategorias
 
-- controllerListarCategorias (GET /categorias)
-   º exige token JWT
-   º retorna: 200 OK + array de categorias
 
 - controllerCriarCategoria (POST /categorias)
    º exige token JWT
    º recebe: nome, tipo
-   º tipo deve ser 'entrada' ou 'saida'
+   º tipo deve ser 'entrada' ou 'despesa'
    º salva no banco
    º retorna: 201 Created
+
+- controllerListarCategorias (GET /categorias)
+   º exige token JWT
+   º retorna: 200 OK + array de categorias
 
 - controllerAtualizarCategoria (PUT /categorias/:id)
    º exige token JWT

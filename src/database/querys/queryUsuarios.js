@@ -9,6 +9,7 @@ const queryBuscarPeloEmail = async (email) => {
 const queryCadastrarUsuario = async (nome, email, senhaCriptografada) => {
     return await knex('usuarios')
     .insert({nome, email, senha: senhaCriptografada})
+    .returning('*')
 }
 
 const queryListarUsuarios = async () => {

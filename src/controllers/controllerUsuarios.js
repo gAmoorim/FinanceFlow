@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const senhaJWT = process.env.JWT_PWD
 const { queryListarUsuarios, queryBuscarPeloEmail, queryCadastrarUsuario, queryAtualizarUsuario, queryUsuarioExistente, queryAtualizarSenhaUsuario, queryDeletarUsuario } = require('../database/querys/queryUsuarios')
 const { validarEmail } = require('../utils/validations')
+const { criarCategoriasBase } = require('../utils/categoriasBase')
+const knex = require('../database/connection')
 
 const controllerCadastrarUsuario = async (req,res) => {
     const { nome, email, senha } = req.body
@@ -28,7 +30,11 @@ const controllerCadastrarUsuario = async (req,res) => {
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 10)
-        await queryCadastrarUsuario(nome, email, senhaCriptografada)
+        const usuario = await queryCadastrarUsuario(nome, email, senhaCriptografada)
+
+        const usuarioId = usuario.id
+
+        await criarCategoriasBase(usuarioId, knex)
 
         return res.status(201).json({
             mensagem: 'Cadastro realizado com sucesso!',
@@ -82,7 +88,7 @@ const controllerObterUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ mensagem: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
     }
 
     try {
@@ -94,7 +100,7 @@ const controllerObterUsuario = async (req,res) => {
         })
     } catch (error) {
         console.error("Ocorreu um erro ao obter o usuário:", error)
-        return res.status(500).json({ mensagem: `Erro ao obter usuário: ${error.message}`})
+        return res.status(500).json({ error: `Erro ao obter usuário: ${error.message}`})
     }
 }
 
@@ -103,13 +109,13 @@ const controllerListarUsuarios = async (req,res) => {
         const usuarios = await queryListarUsuarios()
 
         if (!usuarios) {
-            return res.status(404).json({ mensagem: 'Nenhum usuário encontrado.'})
+            return res.status(404).json({ error: 'Nenhum usuário encontrado.'})
         }
 
         return res.status(200).json(usuarios) 
     } catch (error) {
         console.error("Ocorreu um erro ao listar os usuários:", error)
-        return res.status(500).json({ mensagem: `Erro ao listar os usuários: ${error.message}`})
+        return res.status(500).json({ error: `Erro ao listar os usuários: ${error.message}`})
     }
 }
 
@@ -127,7 +133,7 @@ const controllerAtualizarUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ mensagem: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
     }
 
     try {
@@ -153,13 +159,13 @@ const controllerAtualizarSenhaUsuario = async (req,res) => {
     const { novasenha } = req.body
     
     if (!novasenha) {
-        return res.status(400).json({mensagem: 'informe a nova senha'})
+        return res.status(400).json({ error: 'informe a nova senha'})
     }
 
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ mensagem: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
     }
     
     try {
@@ -169,7 +175,7 @@ const controllerAtualizarSenhaUsuario = async (req,res) => {
         return res.status(200).json({ mensagem: 'Senha Atualizada'})
     } catch (error) {
         console.error("Ocorreu um erro ao atualizar a senha:", error)
-        return res.status(500).json({ mensagem: `Erro ao atualizar a senha: ${error.message}`})
+        return res.status(500).json({ error: `Erro ao atualizar a senha: ${error.message}`})
     }
 }
 
@@ -177,21 +183,21 @@ const controllerDeletarUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ mensagem: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
     }
 
     try {
         const usuario = await queryUsuarioExistente(id)
 
         if (!usuario) {
-            return res.status(404).json({mensagem: 'Usuário não encontrado'})
+            return res.status(404).json({error: 'Usuário não encontrado'})
         }
 
         await queryDeletarUsuario(id)
         return res.status(200).json({mensagem: 'Usuário deletado com sucesso'})
     } catch (error) {
         console.log('Ocorreu um erro ao deletar o usuário', error)
-        return res.status(500).json({ mensagem: `Erro ao deletar o usuário: ${error.message}`})
+        return res.status(500).json({ error: `Erro ao deletar o usuário: ${error.message}`})
     }
 }
 

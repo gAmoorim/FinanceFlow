@@ -13,7 +13,7 @@ CREATE TABLE usuarios (
 CREATE TABLE categorias (
   id SERIAL PRIMARY KEY,
   nome TEXT NOT NULL,
-  tipo text NOT NULL,
+  tipo TEXT NOT NULL CHECK (tipo IN ('entrada', 'despesa')),
   user_id INTEGER NOT NULL,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE

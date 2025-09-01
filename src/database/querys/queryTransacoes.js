@@ -28,7 +28,13 @@ const queryVerificarTransacao = async (transacaoId, usuario_id) => {
   .first()
 }
 
+const queryNovaTransacao = async (descricao, valor, tipo, id, categoria_id) => {
+  return await knex('transacoes')
+  .insert({descricao, valor, tipo, user_id: id, categoria_id})
+}
+
 module.exports = {
   queryListarTransacoes,
-  queryVerificarTransacao
+  queryVerificarTransacao,
+  queryNovaTransacao
 }
