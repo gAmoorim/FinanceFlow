@@ -1,5 +1,3 @@
-create database financeflow;
-
 -- USERS
 CREATE TABLE usuarios (
   id SERIAL PRIMARY KEY,
@@ -8,16 +6,6 @@ CREATE TABLE usuarios (
   senha TEXT NOT NULL,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
- 
--- CATEGORIAS
-CREATE TABLE categorias (
-  id SERIAL PRIMARY KEY,
-  nome TEXT NOT NULL,
-  tipo TEXT NOT NULL CHECK (tipo IN ('entrada', 'despesa')),
-  user_id INTEGER NOT NULL,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
 
 -- TRANSACOES
 CREATE TABLE transacoes (
@@ -25,21 +13,18 @@ CREATE TABLE transacoes (
   descricao TEXT NOT NULL,
   valor NUMERIC(10,2) NOT NULL,
   tipo TEXT NOT NULL,
-  data TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id INTEGER NOT NULL,
-  categoria_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL
+  data TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 -- METAS
 CREATE TABLE metas (
   id SERIAL PRIMARY KEY,
-  valor_limite NUMERIC(10,2) NOT NULL,
+  titulo VARCHAR(255) NOT NULL,
+  valor_atual NUMERIC(10,2) NOT NULL CHECK (valor_atual >= 0),
+  valor_alvo NUMERIC(10,2) NOT NULL CHECK (valor_alvo > 0),
   mes INTEGER NOT NULL CHECK (mes BETWEEN 1 AND 12),
-  ano INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  categoria_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL
+  ano INTEGER NOT NULL CHECK (ano >= 2000),
+  user_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE
 );

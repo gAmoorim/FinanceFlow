@@ -1,3 +1,5 @@
+// CRIAR SEED PARA ADC CATEGORIAS BASE AO CRIAR USUARIO
+
 🔐 Autenticação & Usuário
 
 |── controllerUsuario
@@ -56,7 +58,7 @@
 - controllerCriarTransacao (POST /transacoes)
     º exige token JWT
     º recebe: descricao, valor, tipo, categoria_id, data
-    º valida tipo (entrada ou despesa), valor positivo e existência da categoria
+    º valida tipo (entrada ou despesa), valor positivo
     º salva no banco
     º retorna: 201 Created
 
@@ -77,62 +79,26 @@
     º calcula totais de entrada, saída e saldo
     º retorna: 200 OK + resumo
 
-- controllerGraficoTransacoes (GET /transacoes/grafico)
-    º exige token JWT
-    º validar parâmetros de agrupamento (mês/categoria)
-    º retorna: 200 OK + grafico
+## 📊 Metas
 
-│── 🏷️ controllerCategorias
+│──controllerMetas
 
-
-- controllerCriarCategoria (POST /categorias)
+- controllerCriarMeta (POST /metas)
    º exige token JWT
-   º recebe: nome, tipo
-   º tipo deve ser 'entrada' ou 'despesa'
-   º salva no banco
+   º recebe: titulo, valor_atual, valor_alvo, mes, ano, user_id
+   º valida valores positivos
+   º salva meta no banco
    º retorna: 201 Created
-
-- controllerListarCategorias (GET /categorias)
-   º exige token JWT
-   º retorna: 200 OK + array de categorias
-
-- controllerAtualizarCategoria (PUT /categorias/:id)
-   º exige token JWT
-   º verifica se categoria pertence ao usuário
-   º atualiza dados permitidos
-   º retorna: 204 No Content
-
-- controllerExcluirCategoria (DELETE /categorias/:id)
-   º exige token JWT
-   º verifica se categoria pertence ao usuário
-   º bloqueia se houver transações associadas (opcional)
-   º retorna: 204 No Content
-
-│── controllerMetas
 
 - controllerListarMetas (GET /metas)
    º exige token JWT
    º retorna: 200 OK + array de metas
-
-- controllerCriarMeta (POST /metas)
-   º exige token JWT
-   º recebe: titulo, valor_total, valor_atual?, data_limite?
-   º valida valores positivos
-   º salva meta no banco
-   º retorna: 201 Created
 
 - controllerAtualizarMeta (PUT /metas/:id)
    º exige token JWT
    º verifica se meta pertence ao usuário
    º atualiza campos válidos
    º retorna: 204 No Content
-
-- controllerAdicionarValorMeta (PATCH /metas/:id/adicionar)
-   º exige token JWT
-   º recebe: valor
-   º valida valor positivo e se não ultrapassa valor_total
-   º atualiza valor_atual
-   º retorna: 200 OK
 
 - controllerExcluirMeta (DELETE /metas/:id)
    º exige token JWT

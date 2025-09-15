@@ -8,7 +8,7 @@ const queryBuscarPeloEmail = async (email) => {
 
 const queryCadastrarUsuario = async (nome, email, senhaCriptografada) => {
     return await knex('usuarios')
-    .insert({nome, email, senha: senhaCriptografada})
+    .insert({ nome, email, senha: senhaCriptografada })
     .returning('*')
 }
 
@@ -25,8 +25,8 @@ const queryUsuarioExistente = async (id) => {
 
 const queryAtualizarUsuario = async (id, nome, email) => {
     return await knex('usuarios')
-    .update({nome, email})
     .where('id', id)
+    .update({nome, email})
 }
 
 const queryAtualizarSenhaUsuario = async (id, novaSenhaCriptografada) => {

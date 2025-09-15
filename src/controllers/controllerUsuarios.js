@@ -1,17 +1,15 @@
 require('dotenv').config()
+const { queryListarUsuarios, queryBuscarPeloEmail, queryCadastrarUsuario, queryAtualizarUsuario, queryUsuarioExistente, queryAtualizarSenhaUsuario, queryDeletarUsuario } = require('../database/querys/queryUsuarios')
+const { validarEmail } = require('../utils/validations')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const senhaJWT = process.env.JWT_PWD
-const { queryListarUsuarios, queryBuscarPeloEmail, queryCadastrarUsuario, queryAtualizarUsuario, queryUsuarioExistente, queryAtualizarSenhaUsuario, queryDeletarUsuario } = require('../database/querys/queryUsuarios')
-const { validarEmail } = require('../utils/validations')
-const { criarCategoriasBase } = require('../utils/categoriasBase')
-const knex = require('../database/connection')
 
 const controllerCadastrarUsuario = async (req,res) => {
     const { nome, email, senha } = req.body
 
     if (!nome || !email || !senha) {
-        return res.status(400).json({ error: 'Preencha os campos: nome, senha e email'})
+        return res.status(400).json({ error: 'Preencha todos os campos'})
     }
 
     if (!validarEmail(email)) {
@@ -30,11 +28,7 @@ const controllerCadastrarUsuario = async (req,res) => {
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 10)
-        const usuario = await queryCadastrarUsuario(nome, email, senhaCriptografada)
-
-        const usuarioId = usuario.id
-
-        await criarCategoriasBase(usuarioId, knex)
+        await queryCadastrarUsuario(nome, email, senhaCriptografada)
 
         return res.status(201).json({
             mensagem: 'Cadastro realizado com sucesso!',
@@ -88,7 +82,7 @@ const controllerObterUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
     }
 
     try {
@@ -122,25 +116,27 @@ const controllerListarUsuarios = async (req,res) => {
 const controllerAtualizarUsuario = async (req,res) => {
     const {nome, email} = req.body
 
-    if (!nome || !email) {
+    if (!nome && !email) {
         return res.status(400).json({ error: 'Preencha ao menos um campo para ser atualizado'})
     }
 
-    if (!validarEmail(email)) {
-        return res.status(400).json({ error: 'Formato do email inválido' })
+    if (email && !validarEmail(email)) {
+        return res.status(400).json({ error: 'Formato do email inválido' });
     }
 
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
     }
 
     try {
-        const emailExistente = await queryBuscarPeloEmail(email)
+        if (email) {
+            const emailExistente = await queryBuscarPeloEmail(email);
 
-        if (emailExistente) {
-            return res.status(400).json({ error: 'Emal já cadastrado'})
+            if (emailExistente) {
+                return res.status(400).json({ error: 'Email já cadastrado' });
+            }
         }
 
         await queryAtualizarUsuario(id, nome, email)
@@ -165,7 +161,7 @@ const controllerAtualizarSenhaUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
     }
     
     try {
@@ -183,7 +179,7 @@ const controllerDeletarUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
-        return res.status(200).json({ error: 'Não foi possível receber o id do usuário'})
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
     }
 
     try {

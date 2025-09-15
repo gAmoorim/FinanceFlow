@@ -1,7 +1,7 @@
 const express = require('express')
 const { controllerListarUsuarios, controllerCadastrarUsuario, controllerLoginUsuario, controllerObterUsuario, controllerAtualizarUsuario, controllerAtualizarSenhaUsuario, controllerDeletarUsuario, } = require('../controllers/controllerUsuarios')
-const { controllerCriarTransacao } = require('../controllers/controllerTransacoes')
-const { controllerCriarCategoria } = require('../controllers/controllerCategorias')
+const { controllerCriarTransacao, controllerListarTransacoes, controllerDetalharTransacoes, controllerAtualizarTransacao, controllerExlcuirTransacao, controllerResumoTransacoes } = require('../controllers/controllerTransacoes')
+const { controllerCriarNovaMeta, controllerListarMetas, controllerAtualizarMetas, controllerExcluirMeta } = require('../controllers/controllerMetas')
 const auth = require('../middlewares/auth')
 
 
@@ -11,13 +11,23 @@ rotas.post('/cadastro', controllerCadastrarUsuario)
 rotas.post('/login', controllerLoginUsuario)
 rotas.get('/usuarios', controllerListarUsuarios)
 
-rotas.get('/usuario', auth, controllerObterUsuario)
-rotas.put('/usuario', auth, controllerAtualizarUsuario)
-rotas.put('/atualizarsenha', auth, controllerAtualizarSenhaUsuario)
-rotas.delete('/usuario', auth, controllerDeletarUsuario)
+rotas.use(auth)
 
-rotas.post('/transacao', auth, controllerCriarTransacao)
+rotas.get('/usuario', controllerObterUsuario)
+rotas.put('/usuario', controllerAtualizarUsuario)
+rotas.put('/atualizarsenha', controllerAtualizarSenhaUsuario)
+rotas.delete('/usuario', controllerDeletarUsuario)
 
-rotas.post('/categoria', auth, controllerCriarCategoria)
+rotas.post('/transacoes', controllerCriarTransacao)
+rotas.get('/transacoes', controllerListarTransacoes)
+rotas.get('/transacoes/resumo', controllerResumoTransacoes)
+rotas.get('/transacoes/:transacaoId', controllerDetalharTransacoes)
+rotas.put('/transacoes/:transacaoId', controllerAtualizarTransacao)
+rotas.delete('/transacoes/:transacaoId', controllerExlcuirTransacao)
+
+rotas.post('/metas', controllerCriarNovaMeta)
+rotas.get('/metas', controllerListarMetas)
+rotas.put('/metas/:id', controllerAtualizarMetas)
+rotas.delete('/metas/:id', controllerExcluirMeta)
 
 module.exports = rotas

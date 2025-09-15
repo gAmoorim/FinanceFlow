@@ -1,7 +1,7 @@
 const knex = require('../connection')
 
-const queryListarTransacoes = async (userId, filtros) => {
-  let query = knex("transacoes").where("usuario_id", userId)
+const queryListarTransacoes = async (user_id, filtros) => {
+  let query = knex("transacoes").where("user_id", user_id)
 
   if (filtros.data_inicio) {
     query = query.where("data", ">=", filtros.data_inicio)
@@ -15,26 +15,44 @@ const queryListarTransacoes = async (userId, filtros) => {
     query = query.where("tipo", filtros.tipo)
   }
 
-  if (filtros.categoria_id) {
-    query = query.where("categoria_id", filtros.categoria_id)
-  }
-
   return await query.select("*")
 }
 
-const queryVerificarTransacao = async (transacaoId, usuario_id) => { 
+const queryVerificarTransacao = async (transacaoId, user_id) => { 
   return await knex('transacoes') 
-  .where({ id: transacaoId, user_id: usuario_id }) 
+  .where({ id: transacaoId, user_id}) 
   .first()
 }
 
-const queryNovaTransacao = async (descricao, valor, tipo, id, categoria_id) => {
+const queryNovaTransacao = async (descricao, valor, tipo, user_id) => {
   return await knex('transacoes')
-  .insert({descricao, valor, tipo, user_id: id, categoria_id})
+  .insert({descricao, valor, tipo, user_id})
+}
+
+const queryAtualizarTransacao = async (transacaoId, user_id, descricao, valor, tipo) => {
+  return await knex('transacoes')
+  .update({descricao, valor, tipo})
+  .where({id: transacaoId, user_id})
+  
+}
+
+const queryDeletarTransacao = async (user_id, transacaoId) => {
+  return await knex('transacoes')
+  .where({id: transacaoId, user_id})
+  .delete()
+}
+
+const queryTransacoes = async (user_id) => {
+  return await knex('transacoes')
+  .where({user_id})
+  .returning('*')
 }
 
 module.exports = {
   queryListarTransacoes,
   queryVerificarTransacao,
-  queryNovaTransacao
+  queryNovaTransacao,
+  queryAtualizarTransacao,
+  queryDeletarTransacao,
+  queryTransacoes
 }
