@@ -61,7 +61,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md animate-slide-up">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {initialData ? 'Nova Receita' : 'Nova Transação'}
+            {initialData ? 'Editar Transação' : 'Nova Transação'}
           </h2>
           <button
             onClick={handleClose}
