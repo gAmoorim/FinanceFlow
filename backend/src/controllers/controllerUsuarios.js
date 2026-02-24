@@ -116,8 +116,6 @@ const controllerListarUsuarios = async (req,res) => {
 const controllerAtualizarUsuario = async (req,res) => {
     const {nome, email} = req.body
 
-    console.log("req.body:", req.body);
-
     if (!nome && !email) {
         return res.status(400).json({ error: 'Preencha ao menos um campo para ser atualizado'})
     }
