@@ -2,8 +2,6 @@ require('dotenv').config()
 const { queryListarUsuarios, queryBuscarPeloEmail, queryCadastrarUsuario, queryAtualizarUsuario, queryUsuarioExistente, queryAtualizarSenhaUsuario, queryDeletarUsuario } = require('../database/querys/queryUsuarios')
 const { validarEmail } = require('../utils/validations')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const senhaJWT = process.env.JWT_PWD
 
 const controllerCadastrarUsuario = async (req,res) => {
     const { nome, email, senha } = req.body
@@ -40,49 +38,15 @@ const controllerCadastrarUsuario = async (req,res) => {
     }
 }
 
-const controllerLoginUsuario = async (req,res) => {
-    const { email, senha } = req.body
-    
-    if (!email || !senha) {
-        return res.status(400).json({ error: 'Preencha os campos necessários'})
-    }
-
-    try {
-        const usuario = await queryBuscarPeloEmail(email)
-
-        if (!usuario) {
-            return res.status(400).json({ error: 'email ou senha incorreto'})
-        }
-
-        const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
-
-        if (!senhaCorreta) {
-            return res.status(400).json({ error: 'email ou senha incorreto'})
-        }
-        
-        const dadosTokenUsuario = {
-            id: usuario.id,
-            nome: usuario.nome
-        }
-
-        const token = jwt.sign(dadosTokenUsuario, senhaJWT, { expiresIn: '3h' })
-        const {senha: _, ...dadosUsuario} = usuario
-        
-        return res.status(200).json({
-            usuario: dadosUsuario,
-            token
-        })
-    } catch (error) {
-        console.error("Ocorreu um erro ao realizar o Login:", error)
-        return res.status(500).json({ error: `Erro ao realizar o Login: ${error.message}`})
-    }
-}
-
 const controllerObterUsuario = async (req,res) => {
     const {id} = req.usuario
 
     if (!id) {
         return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
+    }
+
+    if (usuarioLogado.tipo !== 'admin') {
+        return res.status(403).json({ error: 'Acesso negado'})
     }
 
     try {
@@ -185,6 +149,10 @@ const controllerDeletarUsuario = async (req,res) => {
     try {
         const usuario = await queryUsuarioExistente(id)
 
+        if (String(id) !== String(usuario.id)) {
+            return res.status(403).json({ error: 'Somente o próprio usuario pode realizar essa ação'})
+        }
+
         if (!usuario) {
             return res.status(404).json({error: 'Usuário não encontrado'})
         }
@@ -201,7 +169,6 @@ const controllerDeletarUsuario = async (req,res) => {
 
 module.exports = {
     controllerCadastrarUsuario,
-    controllerLoginUsuario,
     controllerObterUsuario,
     controllerListarUsuarios,
     controllerAtualizarUsuario,

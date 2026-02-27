@@ -11,6 +11,9 @@ const _spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-spac
 export const metadata: Metadata = {
   title: 'FinanceFlow - Controle Financeiro',
   description: 'Gerencie suas financas pessoais com facilidade. Controle transacoes, defina metas e acompanhe seu progresso.',
+   icons: {
+    icon: "/favicon.ico",
+  },
 }
 
 export const viewport: Viewport = {

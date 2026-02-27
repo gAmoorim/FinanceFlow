@@ -1,7 +1,8 @@
 const express = require('express')
-const { controllerListarUsuarios, controllerCadastrarUsuario, controllerLoginUsuario, controllerObterUsuario, controllerAtualizarUsuario, controllerAtualizarSenhaUsuario, controllerDeletarUsuario, } = require('../controllers/controllerUsuarios')
+const { controllerListarUsuarios, controllerCadastrarUsuario, controllerObterUsuario, controllerAtualizarUsuario, controllerAtualizarSenhaUsuario, controllerDeletarUsuario, } = require('../controllers/controllerUsuarios')
 const { controllerCriarTransacao, controllerListarTransacoes, controllerDetalharTransacoes, controllerAtualizarTransacao, controllerExlcuirTransacao, controllerResumoTransacoes } = require('../controllers/controllerTransacoes')
 const { controllerCriarNovaMeta, controllerListarMetas, controllerAtualizarMetas, controllerExcluirMeta } = require('../controllers/controllerMetas')
+const { controllerLoginUsuario } = require('../controllers/controllerLogin')
 const auth = require('../middlewares/auth')
 
 
