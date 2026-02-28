@@ -1,0 +1,177 @@
+require('dotenv').config()
+const { queryListarUsuarios, queryBuscarPeloEmail, queryCadastrarUsuario, queryAtualizarUsuario, queryUsuarioExistente, queryAtualizarSenhaUsuario, queryDeletarUsuario } = require('../database/querys/queryUsuarios')
+const { validarEmail } = require('../utils/validations')
+const bcrypt = require('bcrypt')
+
+const controllerCadastrarUsuario = async (req,res) => {
+    const { nome, email, senha } = req.body
+
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ error: 'Preencha todos os campos'})
+    }
+
+    if (!validarEmail(email)) {
+        return res.status(400).json({ error: 'Formato do email inválido' })
+    }
+
+    try {
+        const emailExistente = await queryBuscarPeloEmail(email)
+
+        if (emailExistente) {
+            return res.status(400).json({ error: 'Esse email ja foi cadastrado'})
+        }
+
+        if (senha.length < 6) {
+            return res.status(400).json({ error: 'A senha deve ter pelo menos 6 caracteres'})
+        }
+
+        const senhaCriptografada = await bcrypt.hash(senha, 10)
+        await queryCadastrarUsuario(nome, email, senhaCriptografada)
+
+        return res.status(201).json({
+            mensagem: 'Cadastro realizado com sucesso!',
+            usuario: {nome, email}
+        })
+    } catch (error) {
+        console.error("Ocorreu um erro ao cadastrar o usuário:", error)
+        return res.status(500).json({ error: `Erro ao cadastrar usuário: ${error.message}`})
+    }
+}
+
+const controllerObterUsuario = async (req,res) => {
+    const {id} = req.usuario
+
+    if (!id) {
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
+    }
+
+    if (usuarioLogado.tipo !== 'admin') {
+        return res.status(403).json({ error: 'Acesso negado'})
+    }
+
+    try {
+        const usuario = await queryUsuarioExistente(id)
+
+        return res.status(200).json({ usuario: usuario.nome, 
+            email: usuario.email, 
+            criado_em: usuario.criado_em
+        })
+    } catch (error) {
+        console.error("Ocorreu um erro ao obter o usuário:", error)
+        return res.status(500).json({ error: `Erro ao obter usuário: ${error.message}`})
+    }
+}
+
+const controllerListarUsuarios = async (req,res) => {
+    try {
+        const usuarios = await queryListarUsuarios()
+
+        if (!usuarios) {
+            return res.status(404).json({ error: 'Nenhum usuário encontrado.'})
+        }
+
+        return res.status(200).json(usuarios) 
+    } catch (error) {
+        console.error("Ocorreu um erro ao listar os usuários:", error)
+        return res.status(500).json({ error: `Erro ao listar os usuários: ${error.message}`})
+    }
+}
+
+const controllerAtualizarUsuario = async (req,res) => {
+    const {nome, email} = req.body
+
+    if (!nome && !email) {
+        return res.status(400).json({ error: 'Preencha ao menos um campo para ser atualizado'})
+    }
+
+    if (email && !validarEmail(email)) {
+        return res.status(400).json({ error: 'Formato do email inválido' });
+    }
+
+    const {id} = req.usuario
+
+    if (!id) {
+        return res.status(400).json({ error: 'Não foi possível obter o id do usuário'})
+    }
+
+    try {
+        if (email) {
+            const emailExistente = await queryBuscarPeloEmail(email);
+
+            if (emailExistente && emailExistente.id !== id) {
+                return res.status(400).json({ error: 'Email já cadastrado por outro usuário' })
+            }
+        }
+
+        await queryAtualizarUsuario(id, nome, email)
+
+        return res.status(200).json({
+            mensagem: 'Usuario atualizado!',
+            usuario: {nome, email}
+        })
+    } catch (error) {
+        console.error("Ocorreu um erro ao atualizar o usuário:", error)
+        return res.status(500).json({ mensagem: `Erro ao atualizar o usuário: ${error.message}`})
+    }
+}
+
+const controllerAtualizarSenhaUsuario = async (req,res) => {
+    const { novasenha } = req.body
+    
+    if (!novasenha) {
+        return res.status(400).json({ error: 'informe a nova senha'})
+    }
+
+    const {id} = req.usuario
+
+    if (!id) {
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
+    }
+    
+    try {
+        const novaSenhaCriptografada = await bcrypt.hash(novasenha, 10)
+        await queryAtualizarSenhaUsuario(id, novaSenhaCriptografada)
+        
+        return res.status(200).json({ mensagem: 'Senha Atualizada'})
+    } catch (error) {
+        console.error("Ocorreu um erro ao atualizar a senha:", error)
+        return res.status(500).json({ error: `Erro ao atualizar a senha: ${error.message}`})
+    }
+}
+
+const controllerDeletarUsuario = async (req,res) => {
+    const {id} = req.usuario
+
+    if (!id) {
+        return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
+    }
+
+    try {
+        const usuario = await queryUsuarioExistente(id)
+
+        if (String(id) !== String(usuario.id)) {
+            return res.status(403).json({ error: 'Somente o próprio usuario pode realizar essa ação'})
+        }
+
+        if (!usuario) {
+            return res.status(404).json({error: 'Usuário não encontrado'})
+        }
+
+        await queryDeletarUsuario(id)
+        return res.status(200).json({mensagem: 'Usuário deletado com sucesso'})
+    } catch (error) {
+        console.log('Ocorreu um erro ao deletar o usuário', error)
+        return res.status(500).json({ error: `Erro ao deletar o usuário: ${error.message}`})
+    }
+}
+
+
+
+module.exports = {
+    controllerCadastrarUsuario,
+    controllerObterUsuario,
+    controllerListarUsuarios,
+    controllerAtualizarUsuario,
+    controllerAtualizarSenhaUsuario,
+    controllerDeletarUsuario
+}
