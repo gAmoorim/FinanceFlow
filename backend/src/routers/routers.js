@@ -6,7 +6,7 @@ const { controllerLoginUsuario } = require('../controllers/controllerLogin')
 const auth = require('../middlewares/auth')
 
 
-const rotas = express()
+const rotas = express.Router()
 
 rotas.post('/cadastro', controllerCadastrarUsuario)
 rotas.post('/login', controllerLoginUsuario)

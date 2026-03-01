@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = "http://localhost:3000/api"
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null
@@ -18,6 +18,7 @@ async function request<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const token = getToken()
+
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
@@ -39,7 +40,7 @@ async function request<T>(
   const data = await res.json()
 
   if (!res.ok) {
-    throw new Error(data.error || data.mensagem || "Erro na requisicao")
+    throw new Error(data.error || data.mensagem || "Erro na requisição")
   }
 
   return data
@@ -117,7 +118,7 @@ export async function apiCriarTransacao(
   valor: number,
   tipo: "entrada" | "despesa"
 ) {
-  return request<{ mensagem: string; transacao: { descricao: string; valor: number; tipo: string } }>(
+  return request<{ mensagem: string; transacao: Transacao }>(
     "/transacoes",
     { method: "POST", body: JSON.stringify({ descricao, valor, tipo }) }
   )

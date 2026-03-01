@@ -15,7 +15,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/server.js"
+    "dev": ""
   },
   "keywords": [],
   "author": "",
