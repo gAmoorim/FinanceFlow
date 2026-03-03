@@ -143,7 +143,6 @@ export async function apiResumoTransacoes() {
   return request<ResumoTransacoes>("/transacoes/resumo")
 }
 
-// Goals (Metas)
 export interface Meta {
   id: number
   titulo: string

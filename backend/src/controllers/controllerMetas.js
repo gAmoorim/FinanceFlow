@@ -4,10 +4,8 @@ const controllerCriarNovaMeta = async (req, res) => {
     const { titulo, valor_atual, valor_alvo, mes, ano } = req.body
 
     if (!titulo || !valor_atual || !valor_alvo || !mes || !ano) {
-        return res.status(400).jdon({ error: 'Preencha todos os campos'})
+        return res.status(400).json({ error: 'Preencha todos os campos'})
     }
-
-    // AO CRIAR UMA META BUSCAR O SALDO ATUAL PARA DEFINIR VALOR ATUAL, E AO RELIZAR TRANSACOES ATUALIZAR O VALOR ATUAL DA META
 
     if (valor_atual < 0) {
         console.error("Valor inválido: não pode ser negativo!");
