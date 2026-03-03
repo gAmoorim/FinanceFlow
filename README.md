@@ -1,31 +1,68 @@
 # 💰 financeFlow
 
-> API de gerenciamento de finanças pessoais
+> Aplicação web de gerenciamento de finanças pessoais
 
-O **financeFlow** permite aos usuários registrar transações financeiras, criar categorias personalizadas, definir metas de economia e visualizar um resumo do seu dinheiro.
+O FinanceFlow permite que usuários registrem transações financeiras, definam metas de economia e visualizem um resumo completo das suas finanças de forma simples e intuitiva.
+
+🔗 **Deploy:** [financeflow-gamoorim.vercel.app](https://financeflow-gamoorim.vercel.app)
 
 ---
 
 ## 📦 Funcionalidades
 
-- Cadastro e login de usuários
-- Registro de transações (entrada e saída)
-- Criação e gerenciamento de categorias
-- Definição e acompanhamento de metas
-- Resumo financeiro por tipo e valor
+- Cadastro e autenticação de usuários
+- Registro de transações (entradas e despesas)
+- Criação e acompanhamento de metas financeiras
+- Resumo financeiro com saldo, entradas e saídas
+- Filtros de transações por data e tipo
+- Atualização e exclusão de dados do usuário
 
 ---
 
-## 🔐 Autenticação
+## 🧱 Arquitetura
 
-- JWT para proteger rotas privadas
-- Senhas criptografadas com bcrypt
+O projeto é dividido em duas partes independentes:
+
+```
+FinanceFlow/
+├── backend/     → API REST em Node.js + Express
+└── frontend/    → Interface em Next.js + TypeScript
+```
 
 ---
 
 ## ⚙️ Tecnologias
 
-- Node.js + Express
-- PostgreSQL
-- Knex.js
-- JWT + Bcrypt
+### Backend
+- **Node.js** + **Express** — servidor e rotas
+- **PostgreSQL** — banco de dados relacional (hospedado na nuvem)
+- **Knex.js** — query builder
+- **JWT** — autenticação via token
+- **Bcrypt** — criptografia de senhas
+- **CORS** — controle de acesso entre origens
+- **Dotenv** — variáveis de ambiente
+
+### Frontend
+- **Next.js** — framework React com SSR
+- **TypeScript** — tipagem estática
+- **CSS** — estilização
+
+---
+
+## 🔐 Autenticação
+
+- Rotas protegidas via **JWT**
+- Token armazenado no `localStorage`
+- Senhas criptografadas com **bcrypt**
+
+---
+
+## 🚀 Deploy
+
+| Serviço | Responsabilidade |
+|---|---|
+| [Vercel](https://vercel.com) | Frontend (Next.js) |
+| [Railway](https://railway.app) | Backend (Node.js + Express) |
+| Nuvem | Banco de dados PostgreSQL |
+
+---
