@@ -199,7 +199,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-white/[0.06] bg-[oklch(0.10_0.02_160)] px-6 py-6 text-center">
         <p className="text-xs text-white/30">
-          FinanceFlow &mdash; Projeto open-source
+          FinanceFlow &mdash; Projeto open-source para fins educativos
         </p>
       </footer>
     </div>
