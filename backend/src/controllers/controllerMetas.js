@@ -2,17 +2,22 @@ const { queryCriarNovaMeta, queryListarMetas, queryObterMeta, queryAtualizarMeta
 
 const controllerCriarNovaMeta = async (req, res) => {
     const { titulo, valor_atual, valor_alvo, mes, ano } = req.body
+    const MAX_VALUE = 99_999_999.99
 
     if (!titulo || !valor_atual || !valor_alvo || !mes || !ano) {
         return res.status(400).json({ error: 'Preencha todos os campos'})
     }
 
+    if (Number(valor_atual) > MAX_VALUE || Number(valor_alvo) > MAX_VALUE) {
+        return res.status(400).json({ error: 'Valor não pode ser maior que 99.999.999,99' })
+    }
+
     if (valor_atual < 0) {
-        console.error("Valor inválido: não pode ser negativo!");
+        return res.status(400).json({error: "Valor inválido: não pode ser negativo!"})
     }
 
     if (valor_alvo <= 0) {
-        console.error("Valor inválido: não pode ser negativo!");
+        return res.status(400).json({error: "Valor inválido: não pode ser negativo!"})
     }
 
     try {

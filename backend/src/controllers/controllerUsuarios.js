@@ -45,10 +45,6 @@ const controllerObterUsuario = async (req,res) => {
         return res.status(200).json({ error: 'Não foi possível obter o id do usuário'})
     }
 
-    if (usuarioLogado.tipo !== 'admin') {
-        return res.status(403).json({ error: 'Acesso negado'})
-    }
-
     try {
         const usuario = await queryUsuarioExistente(id)
 
