@@ -35,42 +35,49 @@ const stats = [
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[oklch(0.14_0.04_160)]">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[oklch(0.14_0.04_160)]">
+      
       {/* Header */}
-      <header className="relative z-20 flex items-center justify-between px-6 py-4 lg:px-12 lg:py-5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <TrendingUp className="h-5 w-5 text-primary-foreground" />
+      <header className="relative z-20">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-12 lg:py-5">
+          
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary sm:h-9 sm:w-9">
+              <TrendingUp className="h-4 w-4 text-primary-foreground sm:h-5 sm:w-5" />
+            </div>
+            <span className="text-sm font-bold tracking-tight text-white sm:text-lg">
+              FinanceFlow
+            </span>
           </div>
-          <span className="text-lg font-bold tracking-tight text-white">
-            FinanceFlow
-          </span>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <Button
-            asChild
-            variant="ghost"
-            className="text-white/80 hover:bg-white/10 hover:text-white"
-          >
-            <Link href="/login">
-              Acessar conta
-            </Link>
-          </Button>
-          <Button
-            asChild
-            className="rounded-full font-semibold"
-          >
-            <Link href="/cadastro">
-              Criar conta
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              asChild
+              variant="ghost"
+              className="text-white/80 hover:bg-white/10 hover:text-white"
+            >
+              <Link href="/login">
+                Acessar conta
+              </Link>
+            </Button>
+
+            <Button
+              asChild
+              className="rounded-full font-semibold"
+            >
+              <Link href="/cadastro">
+                Criar conta
+              </Link>
+            </Button>
+          </div>
+
         </div>
       </header>
 
       {/* Hero section */}
       <section className="relative flex flex-1 items-center overflow-hidden">
-        {/* Background decorations */}
+
+        {/* Background grid */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
@@ -79,10 +86,12 @@ export default function LandingPage() {
             backgroundSize: "80px 80px",
           }}
         />
+
+        {/* Background glows */}
         <div className="pointer-events-none absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-primary/15 blur-[160px]" />
         <div className="pointer-events-none absolute -bottom-32 right-0 h-[500px] w-[500px] rounded-full bg-primary/10 blur-[140px]" />
 
-        {/* Curved accent */}
+        {/* Curved decoration */}
         <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[55%] lg:block">
           <svg
             viewBox="0 0 800 900"
@@ -98,9 +107,11 @@ export default function LandingPage() {
           </svg>
         </div>
 
-        <div className="relative z-10 flex w-full flex-col items-center gap-12 px-6 py-16 lg:flex-row lg:gap-8 lg:px-12 lg:py-0">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-12 px-6 py-16 lg:flex-row lg:gap-12 lg:px-12 lg:py-20">
+
           {/* Left content */}
           <div className="flex-1 text-center lg:text-left">
+
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur-sm">
               <Zap className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-medium text-white/70">
@@ -108,7 +119,7 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <h1 className="text-4xl font-bold leading-[1.12] tracking-tight text-white text-balance sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Tudo que voce precisa para organizar suas{" "}
               <span className="text-primary">financas</span> de vez
             </h1>
@@ -119,6 +130,7 @@ export default function LandingPage() {
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
+
               <Button
                 asChild
                 size="lg"
@@ -129,6 +141,7 @@ export default function LandingPage() {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
+
               <Button
                 asChild
                 variant="ghost"
@@ -139,42 +152,54 @@ export default function LandingPage() {
                   Ja tenho conta
                 </Link>
               </Button>
+
             </div>
           </div>
 
-          {/* Right mockup */}
+          {/* Right image */}
           <div className="relative flex-1 lg:flex lg:justify-end">
+
             <div className="relative mx-auto w-full max-w-md lg:max-w-lg">
-              {/* Glow behind image */}
+
               <div className="absolute inset-0 translate-y-4 scale-95 rounded-3xl bg-primary/20 blur-3xl" />
+
               <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
                 <Image
-                  src="dashboard.png"
+                  src="/dashboard.png"
                   alt="FinanceFlow dashboard mostrando controle financeiro"
                   width={600}
                   height={450}
-                  className="h-auto w-full"
+                  className="h-auto w-full object-contain"
                   priority
                 />
               </div>
-              {/* Floating badge */}
+
+              {/* Floating card */}
               <div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-white/10 bg-[oklch(0.18_0.04_160)] px-4 py-3 shadow-xl backdrop-blur-sm">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20">
                   <TrendingUp className="h-4 w-4 text-primary" />
                 </div>
+
                 <div>
-                  <p className="text-xs font-semibold text-white">Saldo positivo</p>
-                  <p className="text-xs text-white/50">Atualizado em tempo real</p>
+                  <p className="text-xs font-semibold text-white">
+                    Saldo positivo
+                  </p>
+                  <p className="text-xs text-white/50">
+                    Atualizado em tempo real
+                  </p>
                 </div>
               </div>
+
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* Stats bar */}
+      {/* Stats */}
       <section className="relative z-10 border-t border-white/[0.06] bg-[oklch(0.12_0.03_160)]">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-px px-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-12">
+
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -183,25 +208,31 @@ export default function LandingPage() {
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.06]">
                 <stat.icon className="h-5 w-5 text-primary" />
               </div>
+
               <div>
                 <p className="text-sm font-semibold text-white">
                   {stat.label}
                 </p>
+
                 <p className="mt-1 text-xs leading-relaxed text-white/40">
                   {stat.description}
                 </p>
               </div>
             </div>
           ))}
+
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] bg-[oklch(0.10_0.02_160)] px-6 py-6 text-center">
-        <p className="text-xs text-white/30">
-          FinanceFlow &mdash; Projeto open-source para fins educativos
-        </p>
+      <footer className="border-t border-white/[0.06] bg-[oklch(0.10_0.02_160)]">
+        <div className="mx-auto max-w-7xl px-6 py-6 text-center">
+          <p className="text-xs text-white/30">
+            FinanceFlow — Projeto open-source para fins educativos
+          </p>
+        </div>
       </footer>
+
     </div>
   )
 }
