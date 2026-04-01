@@ -112,13 +112,6 @@ export default function LandingPage() {
           {/* Left content */}
           <div className="flex-1 text-center lg:text-left">
 
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur-sm">
-              <Zap className="h-3.5 w-3.5 text-primary" />
-              <span className="text-xs font-medium text-white/70">
-                Feito para todo mundo
-              </span>
-            </div>
-
             <h1 className="text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Tudo que voce precisa para organizar suas{" "}
               <span className="text-primary">financas</span> de vez
