@@ -4,7 +4,7 @@
 
 O FinanceFlow permite que usuários registrem transações financeiras, definam metas de economia e visualizem um resumo completo das suas finanças de forma simples e intuitiva.
 
-🔗 **Deploy:** [financeflow-gamoorim.vercel.app](https://financeflow-gamoorim.vercel.app)
+🔗 **Deploy:** [financeflow-gamoorim.vercel.app](https://financefloweb.vercel.app)
 
 ---
 
