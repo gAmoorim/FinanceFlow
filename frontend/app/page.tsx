@@ -114,7 +114,7 @@ export default function LandingPage() {
 
             <h1 className="text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Tudo que voce precisa para organizar suas{" "}
-              <span className="text-primary">financas</span> de vez
+              <span className="text-primary">finanças</span> de vez
             </h1>
 
             <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-white/50 lg:mx-0 lg:text-lg">
