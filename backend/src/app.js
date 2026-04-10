@@ -6,7 +6,8 @@ require('dotenv').config()
 const app = express()
 
 app.use(cors({
-  origin: '*'
+  origin: ['https://financefloweb.vercel.app', 'http://localhost:3001'],
+  credentials: false
 }))
 
 app.use(express.json())
