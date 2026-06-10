@@ -61,8 +61,7 @@ FinanceFlow/
 
 | Serviço | Responsabilidade |
 |---|---|
-| [Vercel](https://vercel.com) | Frontend (Next.js) |
-| [Railway](https://railway.app) | Backend (Node.js + Express) |
-| Nuvem | Banco de dados PostgreSQL |
+| [Vercel](https://vercel.com) | Frontend (Next.js) + Backend (Node.js + Express) |
+| [Neon](https://neon.com) | Banco de dados PostgreSQL |
 
 ---
